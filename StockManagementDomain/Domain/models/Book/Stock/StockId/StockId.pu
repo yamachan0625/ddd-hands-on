@@ -1,0 +1,7 @@
+@startuml StockId
+
+class "StockId" as StockId {
+    + value: string
+}
+
+@enduml

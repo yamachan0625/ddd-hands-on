@@ -1,0 +1,13 @@
+@startuml Price
+
+class "Price(価格)" as Price {
+    + value: number
+}
+
+note bottom of Price
+    日本円のみ扱う。
+    MAX = 1,000,000
+    MIN = 1
+end note 
+
+@enduml

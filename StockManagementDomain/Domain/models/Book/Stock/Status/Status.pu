@@ -1,0 +1,12 @@
+@startuml BookId
+
+class "Status(ステータス)" as Status {
+    + value: Enum { PreSale, OnSale, Discontinued }
+}
+
+note bottom of Status
+    書籍のステータスは、 PreSale (販売前), OnSale (販売中),
+    Discontinued (販売停止)の3つ
+end note 
+
+@enduml

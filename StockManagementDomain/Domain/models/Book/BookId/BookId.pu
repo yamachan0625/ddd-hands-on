@@ -1,0 +1,13 @@
+@startuml BookId
+
+class "BookId" as BookId {
+    + value: string
+}
+
+note bottom of BookId
+    ISBNを適用する。
+    ISBNとは登録出版者の責任において、
+    書籍の書名(タイトル)ごとに付与される番号。
+end note
+
+@enduml
