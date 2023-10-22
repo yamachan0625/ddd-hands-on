@@ -1,0 +1,11 @@
+@startuml QuantityAvailable
+
+class "QuantityAvailable(在庫数)" as QuantityAvailable {
+    + value: number
+}
+
+note bottom of QuantityAvailable
+    整数のみ許可
+end note 
+
+@enduml

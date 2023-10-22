@@ -1,0 +1,25 @@
+@startuml Stock
+
+!include ./StockId/StockId.pu
+!include ./Status/Status.pu
+!include ./QuantityAvailable/QuantityAvailable.pu
+!include ../BookId/BookId.pu
+
+class "Stock(在庫)" as Stock << (E,green) Entity >> {
+    StockId: StockId 
+    BookId: BookId
+    QuantityAvailable: 在庫数
+    Status: ステータス
+}
+
+Stock *-down- StockId
+Stock *-down- BookId
+Stock *-down- QuantityAvailable
+Stock *-down- Status
+
+note bottom of Stock
+    - 初回作成時、ステータスは「販売前」から始まる。
+    - 在庫数は0の場合は在庫切れ。
+end note 
+
+@enduml

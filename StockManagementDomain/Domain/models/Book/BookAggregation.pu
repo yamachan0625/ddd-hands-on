@@ -1,0 +1,12 @@
+@startuml BookAggregation
+
+title 書籍集約 (Book Aggregation)
+
+package "書籍集約(BookAggregation)" {
+    !include ./Book.pu
+    !include ./Stock/Stock.pu
+
+    Book "1" -down- "1" Stock : has >
+}
+
+@enduml

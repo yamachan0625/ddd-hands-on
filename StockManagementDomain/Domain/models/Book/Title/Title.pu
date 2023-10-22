@@ -1,0 +1,12 @@
+@startuml Title
+
+class "Title(タイトル)" as Title {
+    + value: string
+}
+
+note bottom of Title
+  MAX_LENGTH = 1000
+  MIN_LENGTH = 1
+end note
+
+@enduml
