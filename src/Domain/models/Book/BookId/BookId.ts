@@ -1,14 +1,15 @@
 import { ValueObject } from 'Domain/models/shared/ValueObject';
 
-export class BookId extends ValueObject<string, 'BookId'> {
+type BookIdValue = string;
+export class BookId extends ValueObject<BookIdValue, 'BookId'> {
   static MAX_LENGTH = 100;
   static MIN_LENGTH = 10;
 
-  constructor(value: string) {
+  constructor(value: BookIdValue) {
     super(value);
   }
 
-  protected validate(isbn: string): void {
+  protected validate(isbn: BookIdValue): void {
     if (isbn.length < BookId.MIN_LENGTH || isbn.length > BookId.MAX_LENGTH) {
       throw new Error('ISBNの文字数が不正です');
     }

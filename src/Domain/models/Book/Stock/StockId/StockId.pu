@@ -4,4 +4,9 @@ class "StockId" as StockId {
     + value: string
 }
 
+note bottom of StockId
+  MAX_LENGTH = 100
+  MIN_LENGTH = 1
+end note
+
 @enduml
