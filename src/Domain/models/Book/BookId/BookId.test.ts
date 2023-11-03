@@ -3,15 +3,8 @@ import { BookId } from './BookId';
 describe('BookId', () => {
   // 正常系
   test('有効なフォーマットの場合正しい変換結果を期待', () => {
-    expect(new BookId('ISBN978-4-16-715805-7').value).toBe('9784167158057');
-    expect(new BookId('978-4-16-715805-7').value).toBe('9784167158057');
     expect(new BookId('9784167158057').value).toBe('9784167158057');
-  });
-
-  test('旧ISBN(10桁)で入力された場合978を頭に追加した新ISBNに変換される', () => {
-    const isbn10 = '4167158051';
-    const bookId = new BookId(isbn10);
-    expect(bookId.value).toBe('9784167158057'); // 正しい変換結果を期待
+    expect(new BookId('4167158051').value).toBe('4167158051');
   });
 
   test('equals', () => {
@@ -22,9 +15,13 @@ describe('BookId', () => {
     expect(bookId1.equals(bookId3)).toBeFalsy();
   });
 
-  test('toISBN', () => {
+  test('toISBN() 13桁', () => {
     const bookId = new BookId('9784167158057');
     expect(bookId.toISBN()).toBe('ISBN978-4-16-715805-7');
+  });
+  test('toISBN() 10桁', () => {
+    const bookId = new BookId('4167158051');
+    expect(bookId.toISBN()).toBe('ISBN4-16-715805-1');
   });
 
   // 異常系
