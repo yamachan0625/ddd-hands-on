@@ -5,7 +5,8 @@ class "QuantityAvailable(在庫数)" as QuantityAvailable {
 }
 
 note bottom of QuantityAvailable
-    整数のみ許可
+    MAX = 1,000,000
+    MIN = 1
 end note 
 
 @enduml
