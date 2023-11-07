@@ -1,11 +1,11 @@
 import { ValueObject } from 'Domain/models/shared/ValueObject';
 
 export enum StatusEnum {
-  PreSale = 'PreSale',
-  OnSale = 'OnSale',
-  Discontinued = 'Discontinued',
+  InStock = 'InStock',
+  LowStock = 'LowStock',
+  OutOfStock = 'OutOfStock',
 }
-export type StatusLabel = '販売前' | '販売中' | '販売停止';
+export type StatusLabel = '在庫あり' | '残りわずか' | '在庫切れ';
 
 type StatusValue = StatusEnum;
 export class Status extends ValueObject<StatusValue, 'Status'> {
@@ -21,12 +21,12 @@ export class Status extends ValueObject<StatusValue, 'Status'> {
 
   toLabel(): StatusLabel {
     switch (this._value) {
-      case StatusEnum.PreSale:
-        return '販売前';
-      case StatusEnum.OnSale:
-        return '販売中';
-      case StatusEnum.Discontinued:
-        return '販売停止';
+      case StatusEnum.InStock:
+        return '在庫あり';
+      case StatusEnum.LowStock:
+        return '残りわずか';
+      case StatusEnum.OutOfStock:
+        return '在庫切れ';
     }
   }
 }

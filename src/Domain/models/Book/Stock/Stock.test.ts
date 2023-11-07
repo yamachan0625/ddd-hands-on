@@ -10,8 +10,8 @@ jest.mock('nanoid', () => ({
 
 describe('Stock', () => {
   const stockId = new StockId('abc');
-  const quantityAvailable = new QuantityAvailable(10);
-  const status = new Status(StatusEnum.OnSale);
+  const quantityAvailable = new QuantityAvailable(100);
+  const status = new Status(StatusEnum.InStock);
 
   describe('create', () => {
     it('デフォルト値で在庫を作成する', () => {
@@ -23,19 +23,21 @@ describe('Stock', () => {
       expect(
         stock.quantityAvailable.equals(new QuantityAvailable(0))
       ).toBeTruthy();
-      expect(stock.status.equals(new Status(StatusEnum.PreSale))).toBeTruthy();
+      expect(
+        stock.status.equals(new Status(StatusEnum.OutOfStock))
+      ).toBeTruthy();
     });
   });
 
   describe('delete', () => {
-    it('在庫が販売中の場合はエラーを投げる', () => {
+    it('在庫ありの場合はエラーを投げる', () => {
       const stock = Stock.reconstruct(stockId, quantityAvailable, status);
 
-      expect(() => stock.delete()).toThrow('販売中の在庫は削除できません。');
+      expect(() => stock.delete()).toThrow('在庫がある場合削除できません。');
     });
 
-    it('在庫が販売中でない場合はエラーを投げない', () => {
-      const notOnSaleStatus = new Status(StatusEnum.Discontinued);
+    it('在庫なしなしの場合はエラーを投げない', () => {
+      const notOnSaleStatus = new Status(StatusEnum.OutOfStock);
       const stock = Stock.reconstruct(
         stockId,
         quantityAvailable,
@@ -52,7 +54,7 @@ describe('Stock', () => {
       stock.increaseQuantity(5);
 
       expect(
-        stock.quantityAvailable.equals(new QuantityAvailable(15))
+        stock.quantityAvailable.equals(new QuantityAvailable(105))
       ).toBeTruthy();
     });
 
@@ -71,7 +73,7 @@ describe('Stock', () => {
       stock.decreaseQuantity(5);
 
       expect(
-        stock.quantityAvailable.equals(new QuantityAvailable(5))
+        stock.quantityAvailable.equals(new QuantityAvailable(95))
       ).toBeTruthy();
     });
 
@@ -86,19 +88,29 @@ describe('Stock', () => {
     it('減少後の在庫数が0未満になる場合はエラーを投げる', () => {
       const stock = Stock.reconstruct(stockId, quantityAvailable, status);
 
-      expect(() => stock.decreaseQuantity(11)).toThrow();
+      expect(() => stock.decreaseQuantity(101)).toThrow();
     });
 
-    it('在庫数が0になったらステータスを販売停止にする', () => {
+    it('在庫数が0になったらステータスを在庫切れにする', () => {
       const stock = Stock.reconstruct(stockId, quantityAvailable, status);
-      stock.decreaseQuantity(10);
+      stock.decreaseQuantity(100);
 
       expect(
         stock.quantityAvailable.equals(new QuantityAvailable(0))
       ).toBeTruthy();
       expect(
-        stock.status.equals(new Status(StatusEnum.Discontinued))
+        stock.status.equals(new Status(StatusEnum.OutOfStock))
       ).toBeTruthy();
+    });
+
+    it('在庫数が10以下になったらステータスを残りわずかにする', () => {
+      const stock = Stock.reconstruct(stockId, quantityAvailable, status);
+      stock.decreaseQuantity(90);
+
+      expect(
+        stock.quantityAvailable.equals(new QuantityAvailable(10))
+      ).toBeTruthy();
+      expect(stock.status.equals(new Status(StatusEnum.LowStock))).toBeTruthy();
     });
   });
 });

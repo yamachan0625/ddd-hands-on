@@ -13,18 +13,18 @@ export class Stock {
   static create() {
     const defaultStockId = new StockId(); // 自動ID採番
     const defaultQuantityAvailable = new QuantityAvailable(0);
-    const defaultStatus = new Status(StatusEnum.PreSale);
+    const defaultStatus = new Status(StatusEnum.OutOfStock);
 
     return new Stock(defaultStockId, defaultQuantityAvailable, defaultStatus);
   }
 
   delete() {
-    if (this.status.value === StatusEnum.OnSale) {
-      throw new Error('販売中の在庫は削除できません。');
+    if (this.status.value !== StatusEnum.OutOfStock) {
+      throw new Error('在庫がある場合削除できません。');
     }
   }
 
-  changeStatus(newStatus: Status) {
+  private changeStatus(newStatus: Status) {
     this._status = newStatus;
   }
 
@@ -35,6 +35,11 @@ export class Stock {
     }
 
     const newQuantity = this.quantityAvailable.increment(amount).value;
+
+    // 在庫数が10以下ならステータスを残りわずかにする
+    if (newQuantity <= 10) {
+      this.changeStatus(new Status(StatusEnum.LowStock));
+    }
     this._quantityAvailable = new QuantityAvailable(newQuantity);
   }
 
@@ -49,9 +54,14 @@ export class Stock {
       throw new Error('減少後の在庫数が0未満になってしまいます。');
     }
 
-    // 在庫数が0になったらステータスを販売停止にする
+    // 在庫数が10以下ならステータスを残りわずかにする
+    if (newQuantity <= 10) {
+      this.changeStatus(new Status(StatusEnum.LowStock));
+    }
+
+    // 在庫数が0になったらステータスを在庫切れにする
     if (newQuantity === 0) {
-      this.changeStatus(new Status(StatusEnum.Discontinued));
+      this.changeStatus(new Status(StatusEnum.OutOfStock));
     }
 
     this._quantityAvailable = new QuantityAvailable(newQuantity);
