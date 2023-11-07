@@ -7,13 +7,11 @@
 
 class "Stock(在庫)" as Stock << (E,green) Entity >> {
     StockId: StockId 
-    BookId: BookId
     QuantityAvailable: 在庫数
     Status: ステータス
 }
 
 Stock *-down- StockId
-Stock *-down- BookId
 Stock *-down- QuantityAvailable
 Stock *-down- Status
 
