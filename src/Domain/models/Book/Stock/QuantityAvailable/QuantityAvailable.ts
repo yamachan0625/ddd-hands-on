@@ -19,4 +19,16 @@ export class QuantityAvailable extends ValueObject<
       );
     }
   }
+
+  increment(amount: number): QuantityAvailable {
+    const newValue = this._value + amount;
+
+    return new QuantityAvailable(newValue);
+  }
+
+  decrement(amount: number): QuantityAvailable {
+    const newValue = this._value - amount;
+
+    return new QuantityAvailable(newValue);
+  }
 }
