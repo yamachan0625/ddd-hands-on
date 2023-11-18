@@ -1,12 +1,10 @@
 import { Status, StatusEnum } from './Status';
 
-describe('Statusクラスのテスト', () => {
+describe('Status', () => {
   it('有効なステータスでインスタンスが生成されること', () => {
-    expect(new Status(StatusEnum.PreSale).value).toBe(StatusEnum.PreSale);
-    expect(new Status(StatusEnum.OnSale).value).toBe(StatusEnum.OnSale);
-    expect(new Status(StatusEnum.Discontinued).value).toBe(
-      StatusEnum.Discontinued
-    );
+    expect(new Status(StatusEnum.InStock).value).toBe(StatusEnum.InStock);
+    expect(new Status(StatusEnum.OutOfStock).value).toBe(StatusEnum.OutOfStock);
+    expect(new Status(StatusEnum.LowStock).value).toBe(StatusEnum.LowStock);
   });
 
   it('無効なステータスでエラーが投げられること', () => {
@@ -15,19 +13,19 @@ describe('Statusクラスのテスト', () => {
   });
 
   describe('toLabel()', () => {
-    it('ステータスPreSaleが「販売前」に変換されること', () => {
-      const status = new Status(StatusEnum.PreSale);
-      expect(status.toLabel()).toBe('販売前');
+    it('ステータスInStockが「在庫あり」に変換されること', () => {
+      const status = new Status(StatusEnum.InStock);
+      expect(status.toLabel()).toBe('在庫あり');
     });
 
-    it('ステータスOnSaleが「販売中」に変換されること', () => {
-      const status = new Status(StatusEnum.OnSale);
-      expect(status.toLabel()).toBe('販売中');
+    it('ステータスOutOfStockが「在庫切れ」に変換されること', () => {
+      const status = new Status(StatusEnum.OutOfStock);
+      expect(status.toLabel()).toBe('在庫切れ');
     });
 
-    it('ステータスDiscontinuedが「販売停止」に変換されること', () => {
-      const status = new Status(StatusEnum.Discontinued);
-      expect(status.toLabel()).toBe('販売停止');
+    it('ステータスLowStockが「残りわずか」に変換されること', () => {
+      const status = new Status(StatusEnum.LowStock);
+      expect(status.toLabel()).toBe('残りわずか');
     });
   });
 });

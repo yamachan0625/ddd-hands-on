@@ -2,7 +2,7 @@
 
 !include ./Status/Status.pu
 !include ./QuantityAvailable/QuantityAvailable.pu
-!include ../BookId/BookId.pu
+!include ./StockId/StockId.pu
 
 class "Stock(在庫)" as Stock << (E,green) Entity >> {
     StockId: StockId 
@@ -15,8 +15,8 @@ Stock *-down- QuantityAvailable
 Stock *-down- Status
 
 note bottom of Stock
-    - 初回作成時、ステータスは「販売前」から始まる。
-    - 在庫数は0の場合は在庫切れ。
+    - 初回作成時、ステータスは「在庫切れ」から始まる。
+    - 在庫数は0の場合は在庫切れ。10以下の場合は残りわずか。それ以外は在庫あり。
 end note 
 
 @enduml
