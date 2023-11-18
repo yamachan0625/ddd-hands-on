@@ -1,5 +1,6 @@
 import { BookId } from './BookId/BookId';
 import { Price } from './Price/Price';
+import { StatusEnum } from './Stock/Status/Status';
 import { Stock } from './Stock/Stock';
 import { Title } from './Title/Title';
 
@@ -11,23 +12,16 @@ export class Book {
     private readonly _stock: Stock
   ) {}
 
-  static create(bookId: BookId, title: Title, price: Price, stock: Stock) {
-    return new Book(bookId, title, price, stock);
+  static create(bookId: BookId, title: Title, price: Price) {
+    return new Book(bookId, title, price, Stock.create());
   }
 
   static reconstruct(bookId: BookId, title: Title, price: Price, stock: Stock) {
     return new Book(bookId, title, price, stock);
   }
 
-  changeTitle(newTitle: Title) {
-    this._title = newTitle;
-  }
-
-  changePrice(newPrice: Price) {
-    this._price = newPrice;
-  }
-
   delete() {
+    // stockが削除可能か確認する
     this._stock.delete();
     // Bookを削除する処理があればここに書く
   }
@@ -36,7 +30,7 @@ export class Book {
   isSaleable() {
     return (
       this._stock.quantityAvailable.value > 0 &&
-      this._stock.status.value !== 'OutOfStock'
+      this._stock.status.value !== StatusEnum.OutOfStock
     );
   }
 
@@ -46,6 +40,14 @@ export class Book {
 
   decreaseStock(amount: number) {
     this._stock.decreaseQuantity(amount);
+  }
+
+  changeTitle(newTitle: Title) {
+    this._title = newTitle;
+  }
+
+  changePrice(newPrice: Price) {
+    this._price = newPrice;
   }
 
   get bookId(): BookId {
