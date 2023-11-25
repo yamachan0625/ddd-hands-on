@@ -6,20 +6,18 @@ import { Title } from '../../../models/Book/Title/Title';
 import { Price } from '../../../models/Book/Price/Price';
 
 describe('ISBNDuplicationCheckDomainService', () => {
-  let isbnDuplicationCheckDomainService: ISBNDuplicationCheckDomainService;
-  let inMemoryBookRepository: InMemoryBookRepository;
+  let domainService: ISBNDuplicationCheckDomainService;
+  let repository: InMemoryBookRepository;
 
   beforeEach(() => {
     // テスト前に初期化する
-    inMemoryBookRepository = new InMemoryBookRepository();
-    isbnDuplicationCheckDomainService = new ISBNDuplicationCheckDomainService(
-      inMemoryBookRepository
-    );
+    repository = new InMemoryBookRepository();
+    domainService = new ISBNDuplicationCheckDomainService(repository);
   });
 
   test('重複がない場合、falseを返す', async () => {
     const isbn = new BookId('9784167158057');
-    const result = await isbnDuplicationCheckDomainService.execute(isbn);
+    const result = await domainService.execute(isbn);
     expect(result).toBeFalsy();
   });
 
@@ -32,9 +30,9 @@ describe('ISBNDuplicationCheckDomainService', () => {
     });
     const book = Book.create(isbn, title, price);
 
-    await inMemoryBookRepository.save(book);
+    await repository.save(book);
 
-    const result = await isbnDuplicationCheckDomainService.execute(isbn);
+    const result = await domainService.execute(isbn);
     expect(result).toBeTruthy();
   });
 
@@ -45,9 +43,9 @@ describe('ISBNDuplicationCheckDomainService', () => {
     const price = new Price({ amount: 500, currency: 'JPY' });
     const book = Book.create(existingIsbn, title, price);
 
-    await inMemoryBookRepository.save(book);
+    await repository.save(book);
 
-    const result = await isbnDuplicationCheckDomainService.execute(newIsbn);
+    const result = await domainService.execute(newIsbn);
     expect(result).toBeFalsy();
   });
 });

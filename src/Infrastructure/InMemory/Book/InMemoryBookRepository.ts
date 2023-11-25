@@ -11,6 +11,10 @@ export class InMemoryBookRepository implements IBookRepository {
     this.DB[book.bookId.value] = book;
   }
 
+  async update(book: Book) {
+    this.DB[book.bookId.value] = book;
+  }
+
   async delete(bookId: BookId) {
     delete this.DB[bookId.value];
   }
@@ -21,9 +25,5 @@ export class InMemoryBookRepository implements IBookRepository {
     });
 
     return book ? book[1] : null;
-  }
-
-  async findAll(): Promise<Book[]> {
-    return Object.values(this.DB);
   }
 }

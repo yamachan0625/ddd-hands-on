@@ -1,0 +1,32 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Book {
+  bookId          String   @id
+  title           String
+  priceAmount     Float
+  stock           Stock?
+}
+
+model Stock {
+  stockId           String   @id
+  quantityAvailable Int
+  status            Status   @default(OUT_OF_STOCK)
+  book              Book     @relation(fields: [bookId], references: [bookId], onDelete: Cascade)
+  bookId            String   @unique 
+}
+
+enum Status {
+  IN_STOCK
+  LOW_STOCK
+  OUT_OF_STOCK
+}

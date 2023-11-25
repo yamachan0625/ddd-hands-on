@@ -5,6 +5,9 @@ export enum StatusEnum {
   LowStock = 'LowStock',
   OutOfStock = 'OutOfStock',
 }
+const a = StatusEnum;
+a.InStock;
+
 export type StatusLabel = '在庫あり' | '残りわずか' | '在庫切れ';
 
 type StatusValue = StatusEnum;
