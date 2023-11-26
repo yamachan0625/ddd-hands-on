@@ -1,13 +1,12 @@
 import { Prisma, PrismaClient } from '@prisma/client';
 import prisma from './prismaClient';
-import { IClientManager } from 'Infrastructure/shared/IClientManager';
+import { IDataAccessClientManager } from 'Infrastructure/shared/IDataAccessClientManager';
 
-export class PrismaClientManager
-  implements IClientManager<PrismaClient | Prisma.TransactionClient>
-{
-  private client: PrismaClient | Prisma.TransactionClient = prisma;
+type Client = PrismaClient | Prisma.TransactionClient;
+export class PrismaClientManager implements IDataAccessClientManager<Client> {
+  private client: Client = prisma;
 
-  setClient(client: Prisma.TransactionClient): void {
+  setClient(client: Client): void {
     this.client = client;
   }
 

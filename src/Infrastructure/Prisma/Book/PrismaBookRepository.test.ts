@@ -1,4 +1,4 @@
-import { PostgreSQLBookRepository } from './PrismaBookRepository';
+import { PrismaBookRepository } from './PrismaBookRepository';
 import { bookTestDataCreator } from 'Infrastructure/shared/Book/bookTestDataCreator';
 import { Book } from 'Domain/models/Book/Book';
 import { BookId } from 'Domain/models/Book/BookId/BookId';
@@ -9,10 +9,8 @@ import { Status, StatusEnum } from 'Domain/models/Book/Stock/Status/Status';
 import { Stock } from 'Domain/models/Book/Stock/Stock';
 import { PrismaClientManager } from '../PrismaClientManager';
 import prisma from '../prismaClient';
-import { ITransactionManager } from 'Application/shared/ITransactionManager';
-import { IBookRepository } from 'Domain/models/Book/IBookRepository';
 
-describe('PostgreSQLBookRepository', () => {
+describe('PrismaBookRepository', () => {
   beforeEach(async () => {
     // テストごとにデータを初期化する
     await prisma.$transaction([prisma.book.deleteMany()]);
@@ -20,7 +18,7 @@ describe('PostgreSQLBookRepository', () => {
   });
 
   const clientManager = new PrismaClientManager();
-  const repository = new PostgreSQLBookRepository(clientManager);
+  const repository = new PrismaBookRepository(clientManager);
 
   test('saveした集約がfindで取得できる', async () => {
     const bookId = new BookId('9784167158057');
@@ -85,23 +83,3 @@ describe('PostgreSQLBookRepository', () => {
     expect(deletedEntity).toBeNull();
   });
 });
-
-class Service {
-  constructor(
-    private repository: IBookRepository,
-    private transactionManager: ITransactionManager
-  ) {}
-
-  async createBook() {
-    await this.transactionManager.run(async () => {
-      const bookId = new BookId('9784167158057');
-      const title = new Title('吾輩は猫である');
-      const price = new Price({
-        amount: 770,
-        currency: 'JPY',
-      });
-      const book = Book.create(bookId, title, price);
-      await this.repository.save(book);
-    });
-  }
-}

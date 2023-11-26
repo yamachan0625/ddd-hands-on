@@ -1,4 +1,4 @@
-export interface IClientManager<T> {
+export interface IDataAccessClientManager<T> {
   setClient(client: T): void;
   getClient(): T;
 }
