@@ -2,7 +2,10 @@ import { ITransactionManager } from 'Application/shared/ITransactionManager';
 import { BookId } from 'Domain/models/Book/BookId/BookId';
 import { IBookRepository } from 'Domain/models/Book/IBookRepository';
 
-import { IncreaseBookStockCommand } from './IncreaseBookStockCommand';
+export type IncreaseBookStockCommand = {
+  bookId: string;
+  incrementAmount: number;
+};
 
 export class IncreaseBookStockApplicationService {
   constructor(

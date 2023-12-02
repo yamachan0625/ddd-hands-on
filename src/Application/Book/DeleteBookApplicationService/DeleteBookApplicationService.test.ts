@@ -2,8 +2,10 @@ import { InMemoryBookRepository } from 'Infrastructure/InMemory/Book/InMemoryBoo
 import { BookId } from 'Domain/models/Book/BookId/BookId';
 import { MockTransactionManager } from 'Application/shared/MockTransactionManager';
 import { bookTestDataCreator } from 'Infrastructure/shared/Book/bookTestDataCreator';
-import { DeleteBookApplicationService } from './DeleteBookApplicationService';
-import { DeleteBookCommand } from './DeleteBookCommand';
+import {
+  DeleteBookApplicationService,
+  DeleteBookCommand,
+} from './DeleteBookApplicationService';
 
 describe('DeleteBookApplicationService', () => {
   it('書籍を削除することができる', async () => {
@@ -20,7 +22,7 @@ describe('DeleteBookApplicationService', () => {
       bookId,
     });
 
-    const command = new DeleteBookCommand(bookId);
+    const command: DeleteBookCommand = { bookId };
     await deleteBookApplicationService.execute(command);
 
     const deletedBook = await repository.find(new BookId(bookId));

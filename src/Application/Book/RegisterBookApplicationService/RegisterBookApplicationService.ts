@@ -4,8 +4,13 @@ import { BookId } from 'Domain/models/Book/BookId/BookId';
 import { IBookRepository } from 'Domain/models/Book/IBookRepository';
 import { Price } from 'Domain/models/Book/Price/Price';
 import { Title } from 'Domain/models/Book/Title/Title';
-import { RegisterBookCommand } from './RegisterBookCommand';
 import { ISBNDuplicationCheckDomainService } from 'Domain/services/Book/ISBNDuplicationCheckDomainService/ISBNDuplicationCheckDomainService';
+
+export type RegisterBookCommand = {
+  isbn: string;
+  title: string;
+  priceAmount: number;
+};
 
 export class RegisterBookApplicationService {
   constructor(

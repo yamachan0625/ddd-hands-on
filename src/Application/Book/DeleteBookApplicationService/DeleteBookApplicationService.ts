@@ -1,8 +1,10 @@
 import { ITransactionManager } from 'Application/shared/ITransactionManager';
 import { BookId } from 'Domain/models/Book/BookId/BookId';
 import { IBookRepository } from 'Domain/models/Book/IBookRepository';
-import { DeleteBookCommand } from './DeleteBookCommand';
 
+export type DeleteBookCommand = {
+  bookId: string;
+};
 export class DeleteBookApplicationService {
   constructor(
     private bookRepository: IBookRepository,

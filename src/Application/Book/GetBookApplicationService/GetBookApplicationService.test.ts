@@ -11,9 +11,9 @@ describe('GetBookApplicationService', () => {
     // テスト用データ作成
     const createdBook = await bookTestDataCreator(repository)({});
 
-    const data = await getBookApplicationService.execute({
-      isbn: createdBook.bookId.value,
-    });
+    const data = await getBookApplicationService.execute(
+      createdBook.bookId.value
+    );
 
     expect(data).toEqual(new BookDTO(createdBook));
   });
@@ -22,9 +22,7 @@ describe('GetBookApplicationService', () => {
     const repository = new InMemoryBookRepository();
     const getBookApplicationService = new GetBookApplicationService(repository);
 
-    const data = await getBookApplicationService.execute({
-      isbn: '9784167158057',
-    });
+    const data = await getBookApplicationService.execute('9784167158057');
 
     expect(data).toBeNull();
   });

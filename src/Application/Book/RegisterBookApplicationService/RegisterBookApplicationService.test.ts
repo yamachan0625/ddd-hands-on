@@ -1,6 +1,8 @@
 import { InMemoryBookRepository } from 'Infrastructure/InMemory/Book/InMemoryBookRepository';
-import { RegisterBookApplicationService } from './RegisterBookApplicationService';
-import { RegisterBookCommand } from './RegisterBookCommand';
+import {
+  RegisterBookApplicationService,
+  RegisterBookCommand,
+} from './RegisterBookApplicationService';
 import { BookId } from 'Domain/models/Book/BookId/BookId';
 import { MockTransactionManager } from 'Application/shared/MockTransactionManager';
 import { bookTestDataCreator } from 'Infrastructure/shared/Book/bookTestDataCreator';
@@ -14,11 +16,12 @@ describe('RegisterBookApplicationService', () => {
       mockTransactionManager
     );
 
-    const command = new RegisterBookCommand(
-      '9784167158057',
-      '吾輩は猫である',
-      770
-    );
+    const command: RegisterBookCommand = {
+      isbn: '9784167158057',
+      title: '吾輩は猫である',
+      priceAmount: 770,
+    };
+
     await registerBookApplicationService.execute(command);
 
     const createdBook = await repository.find(new BookId(command.isbn));
@@ -39,7 +42,11 @@ describe('RegisterBookApplicationService', () => {
       bookId: bookID,
     });
 
-    const command = new RegisterBookCommand(bookID, '吾輩は猫である', 770);
+    const command: RegisterBookCommand = {
+      isbn: bookID,
+      title: '吾輩は猫である',
+      priceAmount: 770,
+    };
     await expect(
       registerBookApplicationService.execute(command)
     ).rejects.toThrow();
