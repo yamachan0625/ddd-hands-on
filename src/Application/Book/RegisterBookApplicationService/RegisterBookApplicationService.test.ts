@@ -16,7 +16,7 @@ describe('RegisterBookApplicationService', () => {
       mockTransactionManager
     );
 
-    const command: RegisterBookCommand = {
+    const command: Required<RegisterBookCommand> = {
       isbn: '9784167158057',
       title: '吾輩は猫である',
       priceAmount: 770,
@@ -25,7 +25,9 @@ describe('RegisterBookApplicationService', () => {
     await registerBookApplicationService.execute(command);
 
     const createdBook = await repository.find(new BookId(command.isbn));
-    expect(createdBook).not.toBeNull();
+    expect(createdBook?.bookId.value).toBe(command.isbn);
+    expect(createdBook?.title.value).toBe(command.title);
+    expect(createdBook?.price.value.amount).toBe(command.priceAmount);
   });
 
   it('重複書籍が存在する場合エラーを投げる', async () => {
@@ -42,7 +44,7 @@ describe('RegisterBookApplicationService', () => {
       bookId: bookID,
     });
 
-    const command: RegisterBookCommand = {
+    const command: Required<RegisterBookCommand> = {
       isbn: bookID,
       title: '吾輩は猫である',
       priceAmount: 770,

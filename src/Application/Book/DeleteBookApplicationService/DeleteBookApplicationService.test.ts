@@ -22,7 +22,7 @@ describe('DeleteBookApplicationService', () => {
       bookId,
     });
 
-    const command: DeleteBookCommand = { bookId };
+    const command: Required<DeleteBookCommand> = { bookId };
     await deleteBookApplicationService.execute(command);
 
     const deletedBook = await repository.find(new BookId(bookId));
