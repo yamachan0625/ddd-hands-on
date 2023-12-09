@@ -11,9 +11,16 @@ import { PrismaTransactionManager } from 'Infrastructure/Prisma/PrismaTransactio
 const app = express();
 const port = 3000;
 
+app.get('/', (_, res) => {
+  res.send('Hello World!');
+});
+
+app.listen(port, () => {
+  console.log(`Example app listening on port ${port}`);
+});
+
 // JSON形式のリクエストボディを正しく解析するために必要
 app.use(express.json());
-
 app.post('/book', async (req, res) => {
   try {
     const requestBody = req.body as {
@@ -40,8 +47,4 @@ app.post('/book', async (req, res) => {
     // 実際はエラーを解析し、詳細なレスポンスを返す。また、ロギングなどを行う。
     res.status(500).json({ message: (error as Error).message });
   }
-});
-
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
 });
