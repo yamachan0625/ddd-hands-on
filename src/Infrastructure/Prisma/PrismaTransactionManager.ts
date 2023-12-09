@@ -9,13 +9,11 @@ export class PrismaTransactionManager implements ITransactionManager {
     return await prisma.$transaction(async (transaction) => {
       this.clientManager.setClient(transaction);
 
-      try {
-        return await callback();
-      } catch (error) {
-        // リトライ処理やロギング処理を入れる
-      } finally {
-        this.clientManager.setClient(prisma);
-      }
+      const res = await callback();
+      // リセット
+      this.clientManager.setClient(prisma);
+
+      return res;
     });
   }
 }
