@@ -1,3 +1,5 @@
+import { injectable, inject } from 'tsyringe';
+
 import { $Enums } from '@prisma/client';
 import { Book } from 'Domain/models/Book/Book';
 import { BookId } from 'Domain/models/Book/BookId/BookId';
@@ -10,8 +12,12 @@ import { StockId } from 'Domain/models/Book/Stock/StockId/StockId';
 import { Title } from 'Domain/models/Book/Title/Title';
 import { PrismaClientManager } from '../PrismaClientManager';
 
+@injectable()
 export class PrismaBookRepository implements IBookRepository {
-  constructor(private clientManager: PrismaClientManager) {}
+  constructor(
+    @inject('IDataAccessClientManager')
+    private clientManager: PrismaClientManager
+  ) {}
 
   // DBのstatusの型とドメイン層のStatusの型が異なるので変換する
   private statusDataMapper(
