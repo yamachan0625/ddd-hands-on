@@ -1,7 +1,7 @@
 import { isEqual } from 'lodash';
 
 export abstract class ValueObject<T, U> {
-  // @ts-expect-error
+  // @ts-expect-error 型で区別するために利用
   private _type: U;
   protected readonly _value: T;
 
