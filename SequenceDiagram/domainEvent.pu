@@ -38,21 +38,27 @@ else 重複がない場合
     ' イベントパブリッシュ
     PrismaRepo -> EventPublisher : イベントパブリッシュ
     deactivate PrismaRepo
+
     activate EventPublisher
+    RegisterService -> Express : 成功レスポンス
+    deactivate RegisterService
+    Express -> クライアント : 成功レスポンス
+    deactivate Express
+    
+
     EventPublisher -> Topic : イベントパブリッシュ (emitter.emit())
+    deactivate EventPublisher
     activate Topic
 
 
-    Topic <- LogSubscriber : イベントサブスクライブ (emitter.once())
+    Topic -> LogSubscriber : イベントサブスクライブ (emitter.once())
     deactivate Topic
     activate LogSubscriber
     LogSubscriber -> LogSubscriber : ログ処理
-    deactivate LogSubscriber
 
-    EventPublisher --> RegisterService : イベント処理完了
+    ' EventPublisher --> RegisterService : イベント処理完了
     deactivate EventPublisher
-    RegisterService -> Express : 成功レスポンス
-    Express -> クライアント : 成功レスポンス
+
 end
 
 deactivate RegisterService

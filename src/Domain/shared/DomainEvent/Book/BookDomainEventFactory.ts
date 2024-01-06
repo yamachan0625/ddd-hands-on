@@ -3,7 +3,7 @@ import { DomainEvent } from '../DomainEvent';
 import { StatusLabel } from 'Domain/models/Book/Stock/Status/Status';
 
 export type BookDomainEventBody = {
-  BookId: string;
+  bookId: string;
   title: string;
   price: number;
   quantityAvailable: number;
@@ -27,7 +27,7 @@ export class BookDomainEventFactory {
 
   private entityToEventBody(): BookDomainEventBody {
     return {
-      BookId: this.book.bookId.value,
+      bookId: this.book.bookId.value,
       title: this.book.title.value,
       price: this.book.price.value.amount,
       quantityAvailable: this.book.quantityAvailable.value,
