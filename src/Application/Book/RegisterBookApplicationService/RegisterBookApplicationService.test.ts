@@ -6,14 +6,17 @@ import {
 import { BookId } from 'Domain/models/Book/BookId/BookId';
 import { MockTransactionManager } from 'Application/shared/MockTransactionManager';
 import { bookTestDataCreator } from 'Infrastructure/shared/Book/bookTestDataCreator';
+import { MockDomainEventPublisher } from 'Infrastructure/DomainEvent/Mock/MockDomainEventPublisyer';
 
 describe('RegisterBookApplicationService', () => {
   it('重複書籍が存在しない場合書籍が正常に作成できる', async () => {
     const repository = new InMemoryBookRepository();
     const mockTransactionManager = new MockTransactionManager();
+    const mockDomainEventPublisher = new MockDomainEventPublisher();
     const registerBookApplicationService = new RegisterBookApplicationService(
       repository,
-      mockTransactionManager
+      mockTransactionManager,
+      mockDomainEventPublisher
     );
 
     const command: Required<RegisterBookCommand> = {
@@ -33,9 +36,11 @@ describe('RegisterBookApplicationService', () => {
   it('重複書籍が存在する場合エラーを投げる', async () => {
     const repository = new InMemoryBookRepository();
     const mockTransactionManager = new MockTransactionManager();
+    const mockDomainEventPublisher = new MockDomainEventPublisher();
     const registerBookApplicationService = new RegisterBookApplicationService(
       repository,
-      mockTransactionManager
+      mockTransactionManager,
+      mockDomainEventPublisher
     );
 
     // 重複させるデータを準備

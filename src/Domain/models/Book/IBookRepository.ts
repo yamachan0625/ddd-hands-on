@@ -1,6 +1,6 @@
 import { Book } from './Book';
 import { BookId } from './BookId/BookId';
-import { IDomainEventPublisher } from '../../shared/DomainEvent/IDomainEventPublisher';
+import { IDomainEventPublisher } from 'Domain/shared/DomainEvent/IDomainEventPublisher';
 
 export interface IBookRepository {
   save(book: Book, domainEventPublisher: IDomainEventPublisher): Promise<void>;
