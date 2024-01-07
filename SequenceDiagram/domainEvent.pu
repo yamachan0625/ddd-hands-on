@@ -1,0 +1,66 @@
+@startuml
+actor クライアント
+participant "Express サーバー" as Express
+participant "RegisterBookApplicationService" as RegisterService
+participant "ISBNDuplicationCheckDomainService" as ISBNDuplicateCheck
+participant "Book" as BookAggregate
+participant "PrismaBookRepository" as PrismaRepo
+participant "EventEmitterDomainEventPublisher" as EventPublisher
+participant "StockManagement.BookCreated" as Topic
+participant "BookLogSubscriber" as LogSubscriber
+
+クライアント -> Express : POST /book
+activate Express
+
+Express -> RegisterService : 書籍登録処理開始
+activate RegisterService
+
+RegisterService -> ISBNDuplicateCheck : ISBN 重複チェック
+activate ISBNDuplicateCheck
+ISBNDuplicateCheck --> RegisterService : チェック結果
+deactivate ISBNDuplicateCheck
+
+alt 重複がある場合
+    RegisterService -> Express : エラーレスポンス
+    Express -> クライアント : エラーレスポンス
+else 重複がない場合
+    RegisterService -> BookAggregate : 書籍生成
+    activate BookAggregate
+
+    BookAggregate -> BookAggregate : 'StockManagement.BookCreated' イベント生成
+    BookAggregate --> RegisterService : 書籍生成完了
+    deactivate BookAggregate
+
+    RegisterService -> PrismaRepo : 書籍保存
+    activate PrismaRepo
+    PrismaRepo --> RegisterService : 保存完了
+
+    ' イベントパブリッシュ
+    PrismaRepo -> EventPublisher : イベントパブリッシュ
+    deactivate PrismaRepo
+
+    activate EventPublisher
+    RegisterService -> Express : 成功レスポンス
+    deactivate RegisterService
+    Express -> クライアント : 成功レスポンス
+    deactivate Express
+    
+
+    EventPublisher -> Topic : イベントパブリッシュ (emitter.emit())
+    deactivate EventPublisher
+    activate Topic
+
+
+    Topic -> LogSubscriber : イベントサブスクライブ (emitter.once())
+    deactivate Topic
+    activate LogSubscriber
+    LogSubscriber -> LogSubscriber : ログ処理
+
+    ' EventPublisher --> RegisterService : イベント処理完了
+    deactivate EventPublisher
+
+end
+
+deactivate RegisterService
+deactivate Express
+@enduml

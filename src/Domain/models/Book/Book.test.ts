@@ -6,6 +6,7 @@ import { Stock } from './Stock/Stock';
 import { StockId } from './Stock/StockId/StockId';
 import { QuantityAvailable } from './Stock/QuantityAvailable/QuantityAvailable';
 import { Status, StatusEnum } from './Stock/Status/Status';
+import { BOOK_EVENT_NAME } from 'Domain/shared/DomainEvent/Book/BookDomainEventFactory';
 
 // nanoid() をモックする
 jest.mock('nanoid', () => ({
@@ -26,7 +27,7 @@ describe('Book', () => {
   });
 
   describe('create', () => {
-    it('デフォルト値で在庫を作成する', () => {
+    it('デフォルト値で在庫を作成し、ドメインイベントが生成される', () => {
       const book = Book.create(bookId, title, price);
 
       expect(book.bookId.equals(bookId)).toBeTruthy();
@@ -41,6 +42,8 @@ describe('Book', () => {
       expect(
         book.status.equals(new Status(StatusEnum.OutOfStock))
       ).toBeTruthy();
+
+      expect(book.getDomainEvents()[0].eventName).toBe(BOOK_EVENT_NAME.CREATED);
     });
   });
 
@@ -51,7 +54,7 @@ describe('Book', () => {
       expect(() => book.delete()).toThrow('在庫がある場合削除できません。');
     });
 
-    it('在庫なしなしの場合はエラーを投げない', () => {
+    it('在庫なしの場合はエラーを投げない&ドメインイベントが生成される', () => {
       const notOnSaleStatus = new Status(StatusEnum.OutOfStock);
       const notQuantityAvailable = new QuantityAvailable(0);
       const stock = Stock.reconstruct(
@@ -62,6 +65,8 @@ describe('Book', () => {
       const book = Book.reconstruct(bookId, title, price, stock);
 
       expect(() => book.delete()).not.toThrow();
+
+      expect(book.getDomainEvents()[0].eventName).toBe(BOOK_EVENT_NAME.DELETED);
     });
   });
 
@@ -100,6 +105,15 @@ describe('Book', () => {
       const spy = jest.spyOn(stock, 'decreaseQuantity');
       book.decreaseStock(10);
       expect(spy).toHaveBeenCalled();
+    });
+
+    it('ステータスが、在庫切れの場合ドメインイベントが生成される', () => {
+      const book = Book.reconstruct(bookId, title, price, stock);
+      book.decreaseStock(100);
+
+      expect(book.getDomainEvents()[0].eventName).toBe(
+        BOOK_EVENT_NAME.DEPLETED
+      );
     });
   });
 

@@ -11,6 +11,7 @@ import { Stock } from 'Domain/models/Book/Stock/Stock';
 import { StockId } from 'Domain/models/Book/Stock/StockId/StockId';
 import { Title } from 'Domain/models/Book/Title/Title';
 import { PrismaClientManager } from '../PrismaClientManager';
+import { IDomainEventPublisher } from 'Domain/shared/DomainEvent/IDomainEventPublisher';
 
 @injectable()
 export class PrismaBookRepository implements IBookRepository {
@@ -43,7 +44,7 @@ export class PrismaBookRepository implements IBookRepository {
     }
   }
 
-  async save(book: Book) {
+  async save(book: Book, domainEventPublisher: IDomainEventPublisher) {
     const client = this.clientManager.getClient();
 
     await client.book.create({
@@ -60,9 +61,15 @@ export class PrismaBookRepository implements IBookRepository {
         },
       },
     });
+
+    // ここでイベントを発行する
+    book.getDomainEvents().forEach((event) => {
+      domainEventPublisher.publish(event);
+    });
+    book.clearDomainEvents();
   }
 
-  async update(book: Book) {
+  async update(book: Book, domainEventPublisher: IDomainEventPublisher) {
     const client = this.clientManager.getClient();
     await client.book.update({
       where: {
@@ -79,16 +86,28 @@ export class PrismaBookRepository implements IBookRepository {
         },
       },
     });
+
+    // ここでイベントを発行する
+    book.getDomainEvents().forEach((event) => {
+      domainEventPublisher.publish(event);
+    });
+    book.clearDomainEvents();
   }
 
-  async delete(bookId: BookId) {
+  async delete(book: Book, domainEventPublisher: IDomainEventPublisher) {
     const client = this.clientManager.getClient();
 
     await client.book.delete({
       where: {
-        bookId: bookId.value,
+        bookId: book.bookId.value,
       },
     });
+
+    // ここでイベントを発行する
+    book.getDomainEvents().forEach((event) => {
+      domainEventPublisher.publish(event);
+    });
+    book.clearDomainEvents();
   }
 
   async find(bookId: BookId): Promise<Book | null> {

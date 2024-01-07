@@ -4,6 +4,7 @@ import { BookId } from '../../../models/Book/BookId/BookId';
 import { Book } from '../../../models/Book/Book';
 import { Title } from '../../../models/Book/Title/Title';
 import { Price } from '../../../models/Book/Price/Price';
+import { MockDomainEventPublisher } from 'Infrastructure/DomainEvent/Mock/MockDomainEventPublisyer';
 
 describe('ISBNDuplicationCheckDomainService', () => {
   let domainService: ISBNDuplicationCheckDomainService;
@@ -30,7 +31,7 @@ describe('ISBNDuplicationCheckDomainService', () => {
     });
     const book = Book.create(isbn, title, price);
 
-    await repository.save(book);
+    await repository.save(book, new MockDomainEventPublisher());
 
     const result = await domainService.execute(isbn);
     expect(result).toBeTruthy();
@@ -43,7 +44,7 @@ describe('ISBNDuplicationCheckDomainService', () => {
     const price = new Price({ amount: 500, currency: 'JPY' });
     const book = Book.create(existingIsbn, title, price);
 
-    await repository.save(book);
+    await repository.save(book, new MockDomainEventPublisher());
 
     const result = await domainService.execute(newIsbn);
     expect(result).toBeFalsy();
