@@ -32,8 +32,6 @@ describe('BookId', () => {
   });
 
   test('不正なフォーマットの場合にエラーを投げる', () => {
-    expect(() => new BookId('187437538537852742')).toThrow(
-      '不正なISBNの形式です'
-    );
+    expect(() => new BookId('9994167158057')).toThrow('不正なISBNの形式です');
   });
 });
