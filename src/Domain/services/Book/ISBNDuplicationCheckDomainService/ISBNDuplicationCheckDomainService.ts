@@ -7,8 +7,8 @@ export class ISBNDuplicationCheckDomainService {
   async execute(isbn: BookId): Promise<boolean> {
     // データベースに問い合わせて重複があるか確認する
     const duplicateISBN = await this.bookRepository.find(isbn);
-    const isisDuplicateISBN = !!duplicateISBN;
+    const isDuplicateISBN = !!duplicateISBN;
 
-    return isisDuplicateISBN;
+    return isDuplicateISBN;
   }
 }
