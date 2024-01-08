@@ -2,7 +2,7 @@ import { ValueObject } from 'Domain/models/shared/ValueObject';
 
 type BookIdValue = string;
 export class BookId extends ValueObject<BookIdValue, 'BookId'> {
-  static MAX_LENGTH = 100;
+  static MAX_LENGTH = 13;
   static MIN_LENGTH = 10;
 
   constructor(value: BookIdValue) {
