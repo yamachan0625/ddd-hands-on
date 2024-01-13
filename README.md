@@ -1,5 +1,5 @@
 # 【DDD 入門】TypeScript × ドメイン駆動設計ハンズオン
-
+https://zenn.dev/yamachan0625/books/ddd-hands-on
 ## 概要
 
 このプロジェクトは「【DDD 入門】TypeScript × ドメイン駆動設計ハンズオン」の進行をサポートします。本書で解説されるコード例や実践的な演習を提供します。
